@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "io.github.cempack.nextdns",
   "name": "NextDNS",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": "Elliot Moreau",
   "license": "MIT",
   "description": "See at a glance whether your DNS is filtered by NextDNS, and start, stop or inspect it from the bar.",

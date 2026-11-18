@@ -20,6 +20,7 @@ import re
 import subprocess
 import sys
 import os
+import tempfile
 import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
@@ -183,14 +184,24 @@ def save_key(path):
         return {"ok": False, "error": "invalid"}
     path = os.path.expanduser(path)
     try:
-        os.makedirs(os.path.dirname(path) or ".", mode=0o700, exist_ok=True)
-        tmp = path + ".tmp"
-        fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+        directory = os.path.dirname(path) or "."
+        os.makedirs(directory, mode=0o700, exist_ok=True)
+        # mkstemp picks an unpredictable name and creates it with O_EXCL and
+        # mode 0600, so it never reuses or follows a file someone planted.
+        fd, tmp = tempfile.mkstemp(dir=directory, prefix=".api-key-")
+    except OSError:
+        return {"ok": False, "error": "write"}
+    try:
         with os.fdopen(fd, "w") as handle:
             handle.write(key + "\n")
-        os.chmod(tmp, 0o600)
+            handle.flush()
+            os.fsync(handle.fileno())
         os.replace(tmp, path)
     except OSError:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
         return {"ok": False, "error": "write"}
     return {"ok": True}
 
