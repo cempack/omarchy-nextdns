@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "io.github.cempack.nextdns",
+  "name": "NextDNS",
+  "version": "1.2.0",
+  "author": "Elliot Moreau",
+  "license": "MIT",
+  "description": "See at a glance whether your DNS is filtered by NextDNS, and start, stop or inspect it from the bar.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Panel.qml"
+  },
+  "barWidget": {
+    "displayName": "NextDNS",
+    "description": "NextDNS protection status, 24-hour stats, service switch and dashboard links.",
+    "category": "Network",
+    "allowMultiple": false,
+    "defaultSection": "right",
+    "defaults": {
+      "cliPath": "nextdns",
+      "refreshIntervalSec": 30,
+      "checkConnection": true,
+      "apiKeyFile": "~/.config/nextdns/api-key",
+      "showStats": true
+    },
+    "schema": [
+      {
+        "key": "cliPath",
+        "type": "string",
+        "label": "nextdns path",
+        "defaultValue": "nextdns",
+        "description": "Command used to talk to the NextDNS daemon. Use a full path if nextdns is not on PATH."
+      },
+      {
+        "key": "refreshIntervalSec",
+        "type": "integer",
+        "label": "Refresh interval (seconds)",
+        "min": 10,
+        "max": 600,
+        "step": 5,
+        "defaultValue": 30,
+        "description": "How often the local service status is read."
+      },
+      {
+        "key": "checkConnection",
+        "type": "boolean",
+        "label": "Verify via test.nextdns.io",
+        "defaultValue": true,
+        "description": "Ask https://test.nextdns.io whether DNS really goes through NextDNS: when the panel opens, on refresh, and about every 5 minutes. Turn off to make no network requests."
+      },
+      {
+        "key": "showStats",
+        "type": "boolean",
+        "label": "Show stats",
+        "defaultValue": true,
+        "description": "Show the last 24 hours from the NextDNS API in the panel. The panel's 'Not now' link turns this off; the chart button in its footer turns it back on."
+      },
+      {
+        "key": "apiKeyFile",
+        "type": "string",
+        "label": "API key file",
+        "defaultValue": "~/.config/nextdns/api-key",
+        "description": "File holding a NextDNS API key (from my.nextdns.io/account). When present, the panel shows the last 24 hours of analytics from api.nextdns.io, fetched only while the panel is open."
+      }
+    ]
+  }
+}
